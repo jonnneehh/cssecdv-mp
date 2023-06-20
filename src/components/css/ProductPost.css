@@ -1,0 +1,42 @@
+.product-post{
+    margin-top: 10px;
+    border-color: #C38154;
+    border-style: solid;
+    display: flex;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+}
+
+.product-post > div{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.product-id{
+    justify-content: center;
+    width: 10%;
+}
+
+.product-name{
+    width: 20%;
+}
+
+.product-description{
+    width: 30%;
+}
+
+.product-category{
+    width: 20%;
+}
+
+.product-cost{
+    width: 10%;
+}
+
+.product-quantity{
+    width: 10%;
+    justify-content: center;
+}

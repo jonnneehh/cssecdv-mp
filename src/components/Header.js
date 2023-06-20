@@ -6,7 +6,7 @@ function Header(){
         <>
          <div className = "Header">
             <div className = "header-logo">
-                <img src={Logo} />
+                <img src={Logo} alt="Database Logo" />
                 <p>Database System</p>
             </div>
             <div className = "header-links">
