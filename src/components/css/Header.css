@@ -1,0 +1,46 @@
+.Header {
+    background-color: #FFC26F;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-links{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.header-links > a{
+    margin-left: 20px;
+    margin-right: 40px;
+    font-size: 30px;
+    font-style: normal;
+    text-decoration: none;   
+    font-weight: bold;
+}
+
+.header-links > a:visited{
+    color: black;
+}
+
+.header-links > a:hover{
+    color:aqua;
+}
+
+.header-logo > img {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+}
+
+.header-logo > p {
+    font-size: 50px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 15px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.header-logo{
+    display: flex;
+}
