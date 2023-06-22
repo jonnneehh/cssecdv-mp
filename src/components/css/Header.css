@@ -18,8 +18,8 @@
     font-weight: bold;
 }
 
-.header-links > a:visited{
-    color: black;
+.header-links > a {
+    color:black;
 }
 
 .header-links > a:hover{

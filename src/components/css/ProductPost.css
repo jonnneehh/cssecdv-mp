@@ -40,3 +40,8 @@
     width: 10%;
     justify-content: center;
 }
+
+.product-quantity > p{
+    margin-left: 7px;
+    margin-right: 7px;
+}
