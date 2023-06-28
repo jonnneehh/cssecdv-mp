@@ -4,7 +4,6 @@ import Footer from "./Footer.js"
 import Login from "../pages/Login.js"
 import Register from "../pages/Register.js"
 import UserView from "../pages/UserView.js"
-import AdminView from "../pages/AdminView.js"
 
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
 
@@ -28,7 +27,6 @@ export default function Router(){
                     <Route path="/login" element={<Login />}></Route>
                     <Route path="/register" element={<Register />}></Route>
                     <Route path="/temp-database-user" element={<UserView />}></Route> {/* FOR REGULAR USER VIEW */}
-                    <Route path="/temp-database-admin" element={<AdminView />}></Route> {/* FOR ADMIN VIEW */}
                 </Route>
             </Routes>
             </BrowserRouter>
