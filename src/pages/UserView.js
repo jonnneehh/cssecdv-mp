@@ -1,7 +1,7 @@
 import './css/UserView.css'
 import ProductPost from '../components/ProductPost';
 import ProductHeader from '../components/ProductHeader';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Context from '../components/Context.js'
 import EditView from '../components/EditView';
 
@@ -23,23 +23,22 @@ function UserView(){
             ))}
         </div>
     )
-    
-    var isEditable = false;
+
+    const [view, setView] = useState(<regularView />)
     function toggleView(){
-        if(isEditable) {
-            isEditable = false
-            return {regularView}
+        if(view === <regularView />){
+            setView(<editableView />)
         }
-        else {
-            isEditable = true
-            return {editableView}
+        else{
+            setView(<regularView />)
         }
     }
+ 
     return(
         <>
             <ProductHeader />
-            <div className="posts">
-                {regularView}
+            <div className="posts">   
+                {view}
                 <div className="posts-buttons">
                     <div className="buttons">
                         <button>Save</button>
