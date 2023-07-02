@@ -7,7 +7,6 @@ import EditView from '../components/EditView';
 
 function UserView(){
     const [products, setProducts] = useState([])
-    const [read, setRead] = useState('')
 
     useEffect( () => {
         let processing = true

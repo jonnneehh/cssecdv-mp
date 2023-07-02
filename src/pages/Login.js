@@ -1,10 +1,21 @@
 import './css/Login.css'
+import axios from 'axios';
+
+function handleSubmit(){
+    
+}
+
+async function Authenticate(){
+
+
+    await axios.post("http://localhost:4000/test")
+}
 
 function Login(){
     return(
         <>
          <div className = "Login">
-            <form id="login_form" action="/login" method="POST">
+            <form id="login_form" /*action="/login" method="POST"*/>
                 <div class="form_div">
                     <div class="row" id="user_div">
                         <label for="uname"> Username: </label>
@@ -19,7 +30,7 @@ function Login(){
                     </div>
 
                     <div class="row" id="bottom_div">
-                        <div id="button_div"><button type="submit" id="login"> Sign in </button></div>
+                        <div id="button_div"><button type="submit" id="login" onClick={handleSubmit()}> Sign in </button></div>
                         <p> Don't have an account? <a href="/register"> Register here. </a></p>
                     </div>
                 </div>
@@ -29,4 +40,4 @@ function Login(){
     )
 }
 
-export default Login;
+export default Login; 
