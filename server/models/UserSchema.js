@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose')
 
 /* username: UNIQUE username 
  * profilephoto: filename of their profile photo
@@ -12,7 +12,19 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
+    firstname: {
+        type: String,
+        required: true
+    },
+    lastname: {
+        type: String,
+        required: true
+    },
     email: {
+        type: String,
+        required: true
+    },
+    mobilenum: {
         type: String,
         required: true
     },
@@ -28,6 +40,10 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    lastLoggedIn: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 const User = mongoose.model('User', UserSchema, "users");
