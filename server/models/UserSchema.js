@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
 
 /* username: UNIQUE username 
  * profilephoto: filename of their profile photo
@@ -43,9 +43,14 @@ const UserSchema = new mongoose.Schema({
     lastLoggedIn: {
         type: Date,
         default: Date.now
+    },
+    isActive: {
+        type: Boolean,
+        default: false
     }
 })
 
 const User = mongoose.model('User', UserSchema, "users");
 
-module.export = {"Users" : User}
+export default User
+ 

@@ -1,6 +1,7 @@
-const express = require('express')
-const router = express.Router()
-const User = require('../models/UserSchema.js')
+import {Router} from "express"
+import User from "../models/UserSchema.js"
+
+const router = Router()
 
 router.get('/products', (req, res) => {
     const products = 
@@ -46,14 +47,37 @@ router.post('/register', (req, res) => {
     const {username, firstname, lastname, email, 
            mobilenum, password, confirmpass} = req.body
     
+    const errMessage = ""
+
     console.log(username, firstname, lastname, email, mobilenum, password, confirmpass)
     
+    //Find existing username
+    
+
+    //Check if email is valid
+    var emailRegex = "^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+    if(!emailRegex.test(email)){
+        errMessage = "Email is not valid!"
+    }
+
+    //Check if mobile number is valid
+    var mobileNumRegex = "/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/"
+    if(!mobileNumRegex.test(mobilenum)) {
+        errMessage = "Mobile number is not valid!"
+    }
+
+    //Check if password = confirmpass
+    if(password != confirmpass){
+        errMessage = "Password and Confirmed Password do not match!"
+    }    
     
     //Do some bcrypt on password here
     
+    //Add user to database
 })
 
 router.post('/TEMPORARYaddUser', (req, res) => {
 
 })
-module.exports = router
+
+export default router
