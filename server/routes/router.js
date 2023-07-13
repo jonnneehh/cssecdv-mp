@@ -1,6 +1,6 @@
 import {Router} from "express"
 import User from "../models/UserSchema.js"
-import db from "../models/db.js"
+import createError from "http-errors"
 
 const router = Router()
 
@@ -36,56 +36,51 @@ router.get('/products', (req, res) => {
     res.send(products)
 })
 
-router.post('/login', (req, res) => {
-    const {username, password} = req.body
+router.post('/login', async (req, res) => {
+    try{
+        const result = req.body
 
-    //Do some bcrypt on password here
+        const user = await User.findOne({username: result.username})
+        
+        //Check if user exists
+        if (!user) throw createError.NotFound('User not registered')
 
-    console.log(username, password)
+        //Check if password is good
+        const isMatch = await user.isValidPassword(result.password)
+        if(!isMatch) throw createError.Unauthorized("Invalid Username/Password")
+        
+        res.send({status: 200, message: "Success!"})
+    }catch(e){ 
+        res.send(e)
+    }
 })
 
 router.post('/register', async (req, res) => {
-    const result = req.body
+    try{
+        const result = req.body
+        
+        //Find existing username
+        const doesUserExist = await User.findOne({username: result.username})
+        if(doesUserExist) throw createError[500]("User already exists")
 
-    var errMessage = ""
-    
-    //Find existing username
-    const doesUserExist = await User.findOne({username: result.username})
-    if(doesUserExist) errMessage = "Username already exists!"
+        //Check if email is valid
+        var emailRegex = new RegExp("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+        if(!emailRegex.test(result.email)) throw createError[500]("Invalid Email Format")
+        
+        //Check if mobile number is valid
+        var mobileNumRegex = new RegExp("^(09|\\+639)\\d{9}$")
+        if(!mobileNumRegex.test(result.mobilenum)) throw createError[500]("Invalid Mobile Number Format")
 
-    //Check if email is valid
-    var emailRegex = new RegExp("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
-    if(!emailRegex.test(result.email)){
-        errMessage = "Email is not valid!"
-    }
+        //Check if password = confirmpass 
+        if(result.password != result.confirmpass) throw createError[500]("Password and Confirm Password do not match")
 
-    //Check if mobile number is valid
-    var mobileNumRegex = new RegExp("^(09|\\+639)\\d{9}$")
-    if(!mobileNumRegex.test(result.mobilenum)) { 
-        errMessage = "Mobile number is not valid!"
-    }
-
-    //Check if password = confirmpass 
-    if(result.password != result.confirmpass){
-        errMessage = "Password and Confirmed Password do not match!" 
-    }    
-    
-    //Do some bcrypt on password here 
- 
-
-    //Add user to database
-    if(!errMessage){
         const user = new User(result)
         const savedUser = await user.save()
         res.send({status: 200, message: "Success!"})
+        
+    }catch(e){
+        res.send(e)
     }
-    else{
-        res.send({status: 400, message: errMessage}) 
-    }
-})
-
-router.post('/TEMPORARYaddUser', (req, res) => { 
-
 })
 
 export default router 

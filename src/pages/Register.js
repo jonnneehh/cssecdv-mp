@@ -16,7 +16,7 @@ function Register(){
         const postData = {
             username: username,
             firstname: firstname,
-            lastname: lastname,
+            lastname: lastname, 
             email: email,
             mobilenum: mobilenum,
             password: password,
@@ -34,7 +34,7 @@ function Register(){
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+         
         if (!username) {
             setError(<p className="required">Please fill out the required fields</p>)
         } 

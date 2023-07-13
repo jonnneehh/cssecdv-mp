@@ -1,20 +1,14 @@
 import mongoose from "mongoose"
 import bcrypt from 'bcrypt'
 
-/* username: UNIQUE username 
- * profilephoto: filename of their profile photo
- * email: email of the user. validity is checked upon registering
- * password: String of the user's password to login to site
- */
-
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        unique: true,
+        unique: true, 
         lowercase: true,
         required: true
     },
-    firstname: {
+    firstname: { 
         type: String,
         required: true
     },
@@ -64,9 +58,9 @@ UserSchema.pre('save', async function(next){
             const salt = await bcrypt.genSalt(10)
             const hashedPassword = await bcrypt.hash(this.password, salt)
             this.password = hashedPassword
-        }
-        next()
-    }catch(e){
+        } 
+        next() 
+    }catch(e){ 
         next(e)
     }
 })
@@ -77,9 +71,9 @@ UserSchema.methods.isValidPassword = async function (password) {
     } catch (error) {
       throw error
     }
-  }
+  } 
 
 const User = mongoose.model('User', UserSchema, "users");
 
-export default User
+export default User 
  
