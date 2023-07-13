@@ -11,6 +11,8 @@ function Register(){
     const [password, setPassword] = useState('')
     const [confirmpass, setConfirmpass] = useState('')
     const [error, setError] = useState('')
+    
+    const [displayphoto, setDisplayPhoto] = useState({})
 
     const axiosPostData = async() => {
         const postData = {
@@ -32,7 +34,16 @@ function Register(){
         })
     }
 
-    const handleSubmit = (e) => {
+    const axiosUploadImage = async() => {
+        let formData = new FormData()
+
+        formData.append("displayphoto", displayphoto)
+        
+        console.log(formData)
+        await axios.post("http://localhost:4000/upload", displayphoto)
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
          
         if (!username) {
@@ -55,17 +66,18 @@ function Register(){
         }
         else if (!confirmpass){
             setError(<p className="required">Please fill out the required fields</p>)
-        }
+        } 
         else {
             setError('')
-            axiosPostData()
+            await axiosPostData()
+            await axiosUploadImage()
         }
     }
     
     return(
         <>
          <div className = "Register">
-            <form id="reg_form" onSubmit={handleSubmit}>
+            <form id="reg_form" onSubmit={handleSubmit} encType="multipart/form-data">
                 <div className="form_div">
                     <div className="row" id="user_div">
                         <label htmlFor="user"> Username: </label>
@@ -97,6 +109,12 @@ function Register(){
                         <small id="mobilenumError"></small>
                     </div>
                     
+                    <div className="row" id="displayphoto_div">
+                        <label htmlFor="displayphoto"> Display Photo: </label>
+                        <input type="file" name="displayphoto" id="displayphoto" onChange={(e) => setDisplayPhoto(e.target.files[0])} required/>
+                        <small id="displayphotoError"></small>
+                    </div>
+
                     <div className="row" id="pword_div">
                         <label htmlFor="pword"> Password: </label>
                         <input type="password" name="password" id="password"  value={password} onChange={(e) => setPassword(e.target.value)} required/>
