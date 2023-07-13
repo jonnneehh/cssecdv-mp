@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import bcrypt from 'bcrypt'
 
 /* username: UNIQUE username 
  * profilephoto: filename of their profile photo
@@ -10,6 +11,7 @@ const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         unique: true,
+        lowercase: true,
         required: true
     },
     firstname: {
@@ -22,6 +24,7 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+        lowercase: true,
         required: true
     },
     mobilenum: {
@@ -40,15 +43,41 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    role: {
+        type:String,
+        default: "regular"
+    },
     lastLoggedIn: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     },
     isActive: {
         type: Boolean,
         default: false
     }
 })
+
+//To Bcrypt Password
+UserSchema.pre('save', async function(next){
+    try{
+        if(this.isNew){
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(this.password, salt)
+            this.password = hashedPassword
+        }
+        next()
+    }catch(e){
+        next(e)
+    }
+})
+
+UserSchema.methods.isValidPassword = async function (password) {
+    try {
+      return await bcrypt.compare(password, this.password)
+    } catch (error) {
+      throw error
+    }
+  }
 
 const User = mongoose.model('User', UserSchema, "users");
 

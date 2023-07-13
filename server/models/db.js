@@ -8,7 +8,7 @@ const database = {
         .then(() => console.log('DB Connected!'))
         .catch(err => console.log(err))
     },
-
+    
     insertOne: function(model, doc, callback) {
         model.create(doc)
         .then(() => console.log('Added ' + doc.username))
@@ -25,7 +25,7 @@ const database = {
         .catch(err => console.log(err));
     },
 
-    findOne: function(model, query, projection, callback) {
+    findOne: function(model, query, projection, callback) { 
         model.findOne(query, projection, function(error, result) {
             if(error) return callback(false);
             return callback(result);

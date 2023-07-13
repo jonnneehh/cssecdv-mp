@@ -24,7 +24,12 @@ function Register(){
         }
 
         await axios.post('http://localhost:4000/register', postData)
-        .then(res => setError(<p className="success">{res.data}</p>))
+        .then(res => {
+            if(res.data.status === 200){
+                setError(<p className="error">SUCESSFULLY REGISTERED</p>)
+            }
+            else setError(<p className="error">{res.data.message}</p>)
+        })
     }
 
     const handleSubmit = (e) => {

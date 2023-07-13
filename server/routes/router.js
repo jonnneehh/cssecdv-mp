@@ -1,5 +1,6 @@
 import {Router} from "express"
 import User from "../models/UserSchema.js"
+import db from "../models/db.js"
 
 const router = Router()
 
@@ -43,41 +44,48 @@ router.post('/login', (req, res) => {
     console.log(username, password)
 })
 
-router.post('/register', (req, res) => {
-    const {username, firstname, lastname, email, 
-           mobilenum, password, confirmpass} = req.body
-    
-    const errMessage = ""
+router.post('/register', async (req, res) => {
+    const result = req.body
 
-    console.log(username, firstname, lastname, email, mobilenum, password, confirmpass)
+    var errMessage = ""
     
     //Find existing username
-    
+    const doesUserExist = await User.findOne({username: result.username})
+    if(doesUserExist) errMessage = "Username already exists!"
 
     //Check if email is valid
-    var emailRegex = "^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
-    if(!emailRegex.test(email)){
+    var emailRegex = new RegExp("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+    if(!emailRegex.test(result.email)){
         errMessage = "Email is not valid!"
     }
 
     //Check if mobile number is valid
-    var mobileNumRegex = "/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/"
-    if(!mobileNumRegex.test(mobilenum)) {
+    var mobileNumRegex = new RegExp("^(09|\\+639)\\d{9}$")
+    if(!mobileNumRegex.test(result.mobilenum)) { 
         errMessage = "Mobile number is not valid!"
     }
 
-    //Check if password = confirmpass
-    if(password != confirmpass){
-        errMessage = "Password and Confirmed Password do not match!"
+    //Check if password = confirmpass 
+    if(result.password != result.confirmpass){
+        errMessage = "Password and Confirmed Password do not match!" 
     }    
     
-    //Do some bcrypt on password here
-    
+    //Do some bcrypt on password here 
+ 
+
     //Add user to database
+    if(!errMessage){
+        const user = new User(result)
+        const savedUser = await user.save()
+        res.send({status: 200, message: "Success!"})
+    }
+    else{
+        res.send({status: 400, message: errMessage}) 
+    }
 })
 
-router.post('/TEMPORARYaddUser', (req, res) => {
+router.post('/TEMPORARYaddUser', (req, res) => { 
 
 })
 
-export default router
+export default router 
