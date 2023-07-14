@@ -41,3 +41,9 @@
     padding-right: 10px;
     margin: auto;
 }
+
+.error{
+    background-color: black;
+    padding: 5px;
+    color:red;
+}

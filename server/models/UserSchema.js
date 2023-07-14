@@ -1,18 +1,27 @@
-import mongoose from 'mongoose';
-
-/* username: UNIQUE username 
- * profilephoto: filename of their profile photo
- * email: email of the user. validity is checked upon registering
- * password: String of the user's password to login to site
- */
+import mongoose from "mongoose"
+import bcrypt from 'bcrypt'
 
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        unique: true,
+        unique: true, 
+        lowercase: true,
+        required: true
+    },
+    firstname: { 
+        type: String,
+        required: true
+    },
+    lastname: {
+        type: String,
         required: true
     },
     email: {
+        type: String,
+        lowercase: true,
+        required: true
+    },
+    mobilenum: {
         type: String,
         required: true
     },
@@ -28,12 +37,43 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
+    role: {
+        type:String,
+        default: "regular"
+    },
+    lastLoggedIn: {
+        type: Date,
+        default: Date.now()
+    },
     isActive: {
         type: Boolean,
-        default: 0
+        default: false
     }
 })
 
+//To Bcrypt Password 
+UserSchema.pre('save', async function(next){
+    try{
+        if(this.isNew){
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(this.password, salt)
+            this.password = hashedPassword
+        } 
+        next() 
+    }catch(e){ 
+        next(e)
+    }
+})
+
+UserSchema.methods.isValidPassword = async function (password) {
+    try {
+      return await bcrypt.compare(password, this.password)
+    } catch (error) {
+      throw error
+    }
+  } 
+
 const User = mongoose.model('User', UserSchema, "users");
 
-module.export = {"Users" : User}
+export default User 
+ 

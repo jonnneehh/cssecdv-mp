@@ -1,11 +1,18 @@
-const express = require("express")
-const cors = require("cors")
-const bodyParser = require("body-parser")
-const router = require("./routes/router")
-const mongoose = require('mongoose')
-require('dotenv').config()
+import express from "express"
+import cors from "cors"
+import bodyParser from "body-parser"
+import router from "./routes/router.js"
+import db from "./models/db.js"
+import limitter from "express-rate-limit"
 
-const app = express()
+import { envPort } from "./config.js"
+
+const app = express() 
+
+app.use(limitter({
+    windowMS: 5000,
+    max: 5
+}))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}))
@@ -19,14 +26,12 @@ app.use(cors(corsOptions))
 
 app.use("/", router)
 
-const dbOptions = {useNewUrlParser:true, useUnifiedTopology:true}
-mongoose.connect(process.env.DB_URI, dbOptions)
-.then(() => console.log('DB Connected!'))
-.catch(err => console.log(err))
+db.connect()
 
-const port = process.env.PORT
+const port = envPort || 4000
 const server = app.listen(port, () => {
     console.log("Server is running on port " + port)
 })
 
-
+  
+ 
