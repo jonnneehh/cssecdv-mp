@@ -19,7 +19,9 @@ const controller = {
             if(!mobileNumRegex.test(result.mobilenum)) throw createError[500]("Invalid Mobile Number Format")
              
             //Check if file is valid
-            
+            const allowed = ["image/jpeg", "image/jpg", "image/png"]
+            const filetype = displayphoto.type
+            if(!allowed.includes(filetype)) throw createError[500]("Display Photo Filetype is incorrect")
 
             //Check if password = confirmpass 
             if(result.password != result.confirmpass) throw createError[500]("Password and Confirm Password do not match")

@@ -22,7 +22,8 @@ function Register(){
             email: email,
             mobilenum: mobilenum,
             password: password,
-            confirmpass: confirmpass
+            confirmpass: confirmpass,
+            dpfiletype: displayphoto.type
         }
 
         await axios.post('http://localhost:4000/register', postData)
@@ -40,15 +41,25 @@ function Register(){
 
         formData.append("image", displayphoto)
         
-        console.log(displayphoto)
         await axios.post("http://localhost:4000/upload", formData)
         .then(res => console.log(res.data))
         .catch(err => console.log(err))
     }
 
+    const isCorrectFileType = () => {
+        const allowed = ["image/jpeg", "image/jpg", "image/png"]
+        const filetype = displayphoto.type
+        if(allowed.includes(filetype)){
+            console.log("Correct File Type Found: " + filetype)
+            return true
+        }
+        console.log("WRONG File Type Found: " + filetype)
+        return false
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
-         
+        console.log(displayphoto)
+
         if (!username) {
             setError(<p className="required">Please fill out the required fields</p>)
         } 
@@ -70,6 +81,12 @@ function Register(){
         else if (!confirmpass){
             setError(<p className="required">Please fill out the required fields</p>)
         } 
+        else if(!displayphoto){
+            setError(<p className="required">Please fill out the required fields</p>)
+        }
+        else if(isCorrectFileType()){
+            setError(<p className="required">Only JPG or PNG images are allowed</p>)
+        }
         else {
             setError('')
             await axiosPostData()
