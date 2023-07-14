@@ -35,7 +35,7 @@ function Login(){
     return(
         <>
          <div className = "Login">
-            <form id="login_form" onSubmit={handleSubmit} /*action="/login" method="POST"*/>
+            <form id="login_form" onSubmit={handleSubmit}>
                 <div className="form_div">
                     <div className="row" id="user_div">
                         <label htmlFor="uname"> Username: </label>

@@ -26,8 +26,12 @@ const UserSchema = new mongoose.Schema({
     },
     dateCreated: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     },
+    isActive: {
+        type: Boolean,
+        default: 0
+    }
 })
 
 const User = mongoose.model('User', UserSchema, "users");
