@@ -14,7 +14,7 @@ const database = {
         .then(() => console.log('Added ' + doc.username))
         .catch(err => console.log(err));
     },
-
+ 
     insertMany: function(model, docs, callback) {
         model.insertMany(docs)
         .then(() => {

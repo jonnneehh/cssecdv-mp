@@ -9,10 +9,10 @@ import { envPort } from "./config.js"
 
 const app = express() 
 
-app.use(limitter({
-    windowMS: 5000,
-    max: 5
-}))
+// app.use(limitter({
+//     windowMS: 5000,
+//     max: 5
+// }))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}))

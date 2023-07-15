@@ -26,14 +26,14 @@ export default function Router(){
                     <Route path="/" element={<Login />}></Route>
                     <Route path="/login" element={<Login />}></Route>
                     <Route path="/register" element={<Register />}></Route>
-                    <Route path="/temp-database-user" element={<UserView />}></Route> {/* FOR REGULAR USER VIEW */}
+                    <Route path="/view" element={<UserView />}></Route> {/* FOR REGULAR USER VIEW */}
                 </Route>
             </Routes>
             </BrowserRouter>
         )
     }
 
-    return(
-        <BrowserRoutes />
+    return( 
+        <BrowserRoutes /> 
     )
 }

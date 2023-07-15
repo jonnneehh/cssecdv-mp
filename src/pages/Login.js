@@ -1,34 +1,69 @@
 import './css/Login.css'
-import axios from 'axios';
-import { useState } from "react"
+import AuthContext from "../context/AuthProvider"
+import { useRef, useState, useEffect, useContext } from 'react'
+import { useNavigate } from "react-router-dom"
+
+import axios from '../api/axios'
+const LOGIN_URL = '/login'
+const VIEW_URL = '/view'
+const EDIT_URL = '/edit'
 
 function Login(){
+    const navigate = useNavigate()
+    
+    const { setAuth } = useContext(AuthContext);
+    const userRef = useRef();
+    const errRef = useRef();
+    
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    
+    // useEffect(() => {
+    //     userRef.current.focus();
+    // }, [])
 
-    const axiosPostData = async() => {
-        const postData = {
-            username: username,
-            password: password,
-        }
+    useEffect(() => {
+        setError('');
+    }, [username, password])
 
-        await axios.post('http://localhost:4000/login', postData)
-        .then(res => setError(<p className="success">{res.data}</p>))
-    }
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         
-        if (!username) {
-            setError(<p className="required">Please fill out the required fields</p>)
-        } 
-        else if (!password){
-            setError(<p className="required">Please fill out the required fields</p>)
+        try {
+            if (!username) {
+                setError(<p className="required">Please fill out the required fields</p>)
+            } 
+            else if (!password){
+                setError(<p className="required">Please fill out the required fields</p>)
+            }
+            else {
+                const postData = {
+                    username: username,
+                    password: password,
+                }
+
+                const response = await axios.post(LOGIN_URL, postData);
+                
+                if(response?.data?.success){ 
+                    const role = response?.data?.role
+                    const accessToken = response?.data?.accessToken
+
+                    console.log(response?.data?.role)
+
+                    setUsername('')
+                    setPassword('')
+                    setError('')
+                    await setAuth({ username, password, role, accessToken });
+                    navigate(VIEW_URL)
+                }
+                else{
+                    setError("Invalid Username/Password")
+                }
+            }  
         }
-        else {
-            setError('')
-            axiosPostData()
+        catch (err) { 
+            console.log(err)
         }
     }
 
@@ -49,7 +84,7 @@ function Login(){
                         <small id="login_pwordError"></small>
                     </div> 
 
-                    {error}
+                    <p>{error}</p>
 
                     <div className="row" id="bottom_div">
                         <div id="button_div"><button type="submit" id="login"> Sign in </button></div>

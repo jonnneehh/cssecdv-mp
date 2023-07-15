@@ -4,35 +4,45 @@ import createError from "http-errors"
 const controller = {
     register: async(req, res) => {
         try{
-            const result = req.body
-
+            const resultFileType = req.body.dpfiletype
+            const userResult = {
+                username: req.body.username,
+                firstname: req.body.firstname,
+                lastname: req.body.lastname, 
+                email: req.body.email,
+                mobilenum: req.body.mobilenum,
+                password: req.body.password,
+                confirmpass: req.body.confirmpass,
+            }
+  
             //Find existing username
-            const doesUserExist = await User.findOne({username: result.username})
+            const doesUserExist = await User.findOne({username: userResult.username})
             if(doesUserExist) throw createError[500]("User already exists")
     
             //Check if email is valid
             var emailRegex = new RegExp("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
-            if(!emailRegex.test(result.email)) throw createError[500]("Invalid Email Format")
+            if(!emailRegex.test(userResult.email)) throw createError[500]("Invalid Email Format")
             
             //Check if mobile number is valid
             var mobileNumRegex = new RegExp("^(09|\\+639)\\d{9}$")
-            if(!mobileNumRegex.test(result.mobilenum)) throw createError[500]("Invalid Mobile Number Format")
+            if(!mobileNumRegex.test(userResult.mobilenum)) throw createError[500]("Invalid Mobile Number Format")
              
             //Check if file is valid
             const allowed = ["image/jpeg", "image/jpg", "image/png"]
-            const filetype = displayphoto.type
-            if(!allowed.includes(filetype)) throw createError[500]("Display Photo Filetype is incorrect")
+            if(!allowed.includes(resultFileType)) throw createError[500]("Display Photo Filetype is incorrect")
 
             //Check if password = confirmpass 
-            if(result.password != result.confirmpass) throw createError[500]("Password and Confirm Password do not match")
+            if(userResult.password != userResult.confirmpass) throw createError[500]("Password and Confirm Password do not match")
             
-
-            const user = new User(result)
+            const user = new User(userResult)
             const savedUser = await user.save() 
-            res.send({status: 200, message: "Success!"})
+
+            console.log(savedUser)
+
+            res.render("/")
     
         }catch(e){
-            res.send(e)
+            res.send(e) 
         }
     },
 
@@ -43,15 +53,26 @@ const controller = {
             const user = await User.findOne({username: result.username})
             
             //Check if user exists
-            if (!user) throw createError.NotFound('User not registered')
+            if (!user) res.send({status: 400, message: 'User not registered'})
     
-            //Check if password is good
+            //Check if password is good 
             const isMatch = await user.isValidPassword(result.password)
-            if(!isMatch) throw createError.Unauthorized("Invalid Username/Password")
+            if(!isMatch) res.send({status: 401, message: "Invalid Username/Password"})
             
-            res.send({status: 200, message: "Success!"})
+            //Change user isactive to true
+              
+
+            //Check role
+            
+            console.log("Seems like all is good...")
+            //
+            res.send({
+                status: 200, 
+                success: true,
+                role: user.role,  
+            }) 
         }catch(e){ 
-            res.send(e)
+            //res.send(e)
         }
     }
 }

@@ -7,9 +7,9 @@ const router = Router()
 router.post('/login', auth.login)
 router.post('/register', auth.register)
 
-router.post('/upload', upload.single("image"), (req, res) => {
-    console.log(req.file)
-})
+router.post('/upload', upload.single("image"), (req, res) => {})
+
+router.post('/view')
 
 router.get('/products', (req, res) => {
     const products = 

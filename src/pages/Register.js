@@ -84,7 +84,7 @@ function Register(){
         else if(!displayphoto){
             setError(<p className="required">Please fill out the required fields</p>)
         }
-        else if(isCorrectFileType()){
+        else if(!isCorrectFileType()){
             setError(<p className="required">Only JPG or PNG images are allowed</p>)
         }
         else {
