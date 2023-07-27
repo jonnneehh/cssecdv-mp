@@ -64,7 +64,7 @@ const controller = {
 
             //Check role
             
-            console.log("Seems like all is good...")
+            console.log("LOGIN: Seems like all is good...")
             //
             res.send({
                 status: 200, 

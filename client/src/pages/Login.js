@@ -1,27 +1,20 @@
 import './css/Login.css'
 import AuthContext from "../context/AuthProvider"
-import { useRef, useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from "react-router-dom"
 
 import axios from '../api/axios'
 const LOGIN_URL = '/login'
 const VIEW_URL = '/view'
-const EDIT_URL = '/edit'
 
 function Login(){
     const navigate = useNavigate()
     
     const { setAuth } = useContext(AuthContext);
-    const userRef = useRef();
-    const errRef = useRef();
     
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
-    
-    // useEffect(() => {
-    //     userRef.current.focus();
-    // }, [])
 
     useEffect(() => {
         setError('');

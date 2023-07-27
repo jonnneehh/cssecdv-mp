@@ -1,5 +1,5 @@
-import './App.css';
-import Router from './components/Router'
+import './css/App.css';
+import Router from './routes/Router'
 
 function App() {
   // TODO: Collect data from database

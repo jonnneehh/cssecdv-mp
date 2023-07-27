@@ -1,5 +1,5 @@
-import Header from "./Header.js"
-import Footer from "./Footer.js"
+import Header from "../components/Header.js"
+import Footer from "../components/Footer.js"
 
 import Login from "../pages/Login.js"
 import Register from "../pages/Register.js"
