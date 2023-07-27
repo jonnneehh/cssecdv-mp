@@ -2,10 +2,7 @@ import express from "express"
 import cors from "cors"
 import bodyParser from "body-parser"
 import router from "./routes/router.js"
-import db from "./models/db.js"
 import limitter from "express-rate-limit"
-
-import { envPort } from "./config.js"
 
 const app = express() 
 
@@ -26,9 +23,7 @@ app.use(cors(corsOptions))
 
 app.use("/", router)
 
-db.connect()
-
-const port = envPort || 4000
+const port = process.env.PORT || 4000
 const server = app.listen(port, () => {
     console.log("Server is running on port " + port)
 })

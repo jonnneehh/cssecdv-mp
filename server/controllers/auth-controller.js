@@ -1,9 +1,9 @@
-import User from "../models/UserSchema.js"
 import createError from "http-errors"
+import db from "../models/db.js"
 
 const controller = {
     register: async(req, res) => {
-        try{
+        try{ 
             const resultFileType = req.body.dpfiletype
             const userResult = {
                 username: req.body.username,
@@ -34,12 +34,26 @@ const controller = {
             //Check if password = confirmpass 
             if(userResult.password != userResult.confirmpass) throw createError[500]("Password and Confirm Password do not match")
             
-            const user = new User(userResult)
-            const savedUser = await user.save() 
 
-            console.log(savedUser)
+            //IF NO ERRORS:
+            const bcryptpassword = await async function(){
+                const salt = await bcrypt.genSalt(10)
+                const hashedPassword = await bcrypt.hash(userResult.password, salt)
+                return hashedPassword
+            }
 
-            res.render("/")
+            const data = {
+                username: userResult.username,
+                firstName: userResult.firstname,
+                lastName: userResult.lastname,
+                email: userResult.email,
+                mobileNum: userResult.mobilenum,
+                password: bcryptpassword,
+                profilePhoto: 'temporary.png',
+            }
+            
+            console.log(data)
+            //db.insertOne(data)
     
         }catch(e){
             res.send(e) 
