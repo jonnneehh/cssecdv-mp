@@ -1,74 +1,117 @@
 import mysql from 'mysql2';
+import createError from 'http-errors';
+import bcrypt from 'bcrypt'
+import dotenv from 'dotenv'
 
-const connection = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        database: "cssecdv_db",
-        password: "password"
-    })
+dotenv.config()
 
-    console.log()
+const pool = mysql.createPool({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        database: process.env.DB_NAME,
+        password: process.env.DB_PASSWORD
+    }).promise()
 
-const database = {
+const db = {
 
-    insertOne: async function(data) {
+    /**
+     * TODO: Do bcrypt password here instad of auth-controller.js
+     */
+    insertUser: async function(data) {
         try{
-            connection.connect(err =>{
-                if(err) throw err
-            }) 
+            //Double check if JSON has data
+            if (!data) throw createError[500]("JSON does not contain username")
+            const bcryptpassword = await do_encrypt(data.password)
+            
+            const [result] = await pool.query(`
+            INSERT INTO users (username, firstName, lastName, email, mobileNum, password, profilePhoto) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)`, [data.username, data.firstName, data.lastName, data.email, data.mobileNum, bcryptpassword, data.profilePhoto])
 
-            const query = `INSERT INTO users (username, firstName, lastName, email, mobileNum, password, profilePhoto) VALUES (\"${data.username}\", \"${data.firstName}\", \"${data.lastName}\", \"${data.email}\", \"${data.mobileNum}\", \"${data.password}\", \"${data.profilePhoto}\")`
-    
-            connection.query(query, (err, res) => {
-                if(err) throw err
-                console.log(res) 
-            })
-
-            connection.end(err => {
-                if(err) throw err  
-            })
+            if(result.affectedRows > 0) console.log("DATABASE: Successfully added new user: " + data.username + " with ID: " + result.insertId)
+            else console.log("DATABASE: Error adding new user: " + data.username) 
         }
         catch(e){
             console.log(e)
         }
+
+        function do_encrypt(pw){
+            return new Promise(async (res) => {
+                const salt = await bcrypt.genSalt(10)
+                const hashedPassword = await bcrypt.hash(pw, salt)
+                res(hashedPassword)
+            })
+        }
     }, 
  
-    insertMany: function() {
-        
+    findUser: async function(data) { 
+        try{
+            var doesUserExist = false 
+
+            //Double check if JSON has username
+            if (!data.username) throw createError[500]("JSON does not contain username")
+
+            //Check SQL if user exists using the query below
+            const [result] = await pool.query(`
+            SELECT * 
+            FROM users 
+            WHERE username = ?
+            `, [data.username])
+            if(result[0]) doesUserExist = true
+
+            return doesUserExist
+        }
+        catch(e){
+            console.log(e)
+        }
     },
 
-    findOne: function() { 
-        
-    },
+    validateUser: async function(data){
+        try {
+            //Double check if JSON has username
+            if (!data) throw createError[500]("No data found!")
+
+            //Check SQL if user exists using the query below
+            const [[result]] = await pool.query(`
+            SELECT * 
+            FROM users 
+            WHERE username = ?
+            `, [data.username])
  
-    findMany: function() {
-         
+            var isValid = await bcrypt.compare(data.password, result.password)
+
+            return isValid 
+          } catch (error) {
+            console.log(error)
+            throw error  
+          }
     },
 
-    findAll: function(){
+    getUserRole: async function(data){
+        try{
+            //Double check if JSON has username
+            if (!data.username) throw createError[500]("JSON does not contain username")
 
+            //Check SQL if user exists using the query below
+            const [[result]] = await pool.query(`
+            SELECT * 
+            FROM users 
+            WHERE username = ?
+            `, [data.username])
+
+            return result.role
+        }
+        catch(e){
+            console.log(e)
+        }
     },
 
-    updateOne: function() { 
+    updateUser: function() { 
         
     },
 
-    updateMany: function() {
-        
-    },
-
-    deleteOne: function() {
-        
-    },
-
-    deleteMany: function() {
-        
-    },
-    
-    findOneAndDelete(){
+    deleteUser: function() {
         
     }
-    
 }
 
-export default database;
+export default db;

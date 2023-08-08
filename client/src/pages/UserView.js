@@ -7,26 +7,31 @@ import EditView from '../components/EditView';
 
 function UserView(){
     const [products, setProducts] = useState([])
-
+    const [view, setView] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+    
     useEffect( () => {
-        let processing = true
-        axiosFetchData(processing)
-        return () => {
-            processing = false
-        }
-    },[])
+        const result = axios.get('http://localhost:4000/products')
 
-    const axiosFetchData = async(processing) => {
-        await axios.get('http://localhost:4000/products')
-        .then(res => {
-            if (processing) {
-                setProducts(res.data)
+        async function axiosFetchData() {
+            setIsLoading(true);
+            try {
+                const result = await axios.get('http://localhost:4000/products')
+                do{
+                    setProducts(result.data)
+                    console.log("result.data: " + result.data)
+                    console.log("products: " + products)
+                }while(isLoading)
+            } catch (error) {
+                console.error(error);
+            } finally { 
+                setIsLoading(false);
+                setView(Read)
             }
-        })
-        .then()
-        .catch(err => console.log(err))
-    }
-
+         }
+        axiosFetchData();
+    }, [])
+     
     const Read = (
         <div className="posts-product">
             {products?.map((p) => (
@@ -42,9 +47,7 @@ function UserView(){
             ))}
         </div>
     )
-        
-    const [view, setView] = useState(Read)
-
+    
     function makeViewEdit(){
         return Edit
     }

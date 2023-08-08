@@ -2,14 +2,13 @@ import express from "express"
 import cors from "cors"
 import bodyParser from "body-parser"
 import router from "./routes/router.js"
-import limitter from "express-rate-limit"
 
 const app = express() 
 
-app.use(limitter({
-    windowMS: 5000,
-    max: 10
-}))
+// app.use(limitter({
+//     windowMS: 5000,
+//     max: 10 
+// }))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}))

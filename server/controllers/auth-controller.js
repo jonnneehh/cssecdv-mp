@@ -14,9 +14,9 @@ const controller = {
                 password: req.body.password,
                 confirmpass: req.body.confirmpass,
             }
-  
+            
             //Find existing username
-            const doesUserExist = await User.findOne({username: userResult.username})
+            const doesUserExist = await db.findUser({username: userResult.username})
             if(doesUserExist) throw createError[500]("User already exists")
     
             //Check if email is valid
@@ -36,25 +36,19 @@ const controller = {
             
 
             //IF NO ERRORS:
-            const bcryptpassword = await async function(){
-                const salt = await bcrypt.genSalt(10)
-                const hashedPassword = await bcrypt.hash(userResult.password, salt)
-                return hashedPassword
-            }
-
+            console.log("REGISTER: No errors found!")
             const data = {
                 username: userResult.username,
                 firstName: userResult.firstname,
                 lastName: userResult.lastname,
                 email: userResult.email,
                 mobileNum: userResult.mobilenum,
-                password: bcryptpassword,
+                password: userResult.password,
                 profilePhoto: 'temporary.png',
             }
-            
-            console.log(data)
-            //db.insertOne(data)
-    
+
+            await db.insertUser(data)
+            res.send(data)
         }catch(e){
             res.send(e) 
         }
@@ -63,27 +57,23 @@ const controller = {
     login: async (req, res) => {
         try{
             const result = req.body
-    
-            const user = await User.findOne({username: result.username})
-            
-            //Check if user exists
-            if (!user) res.send({status: 400, message: 'User not registered'})
-    
-            //Check if password is good 
-            const isMatch = await user.isValidPassword(result.password)
-            if(!isMatch) res.send({status: 401, message: "Invalid Username/Password"})
-            
-            //Change user isactive to true
-              
+            console.log(result)
 
-            //Check role
+            //Check if user exists
+            const doesUserExist = await db.findUser({username: result.username})
+            if (!doesUserExist) res.send({status: 400, message: 'User not registered'})
+
+            //Check if password is good 
+            const validPassword = await db.validateUser(result)
+            if(!validPassword) res.send({status: 401, message: "Invalid Username/Password"}) 
             
-            console.log("LOGIN: Seems like all is good...")
-            //
+            //Get user role
+            const role = await db.getUserRole({username: result.username})
+
             res.send({
                 status: 200, 
                 success: true,
-                role: user.role,  
+                role: role
             }) 
         }catch(e){ 
             //res.send(e)

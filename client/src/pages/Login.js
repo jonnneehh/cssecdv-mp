@@ -48,6 +48,8 @@ function Login(){
                     setPassword('')
                     setError('')
                     await setAuth({ username, password, role, accessToken });
+                    
+                    //REDIRECT TO VIEWS
                     navigate(VIEW_URL)
                 }
                 else{
