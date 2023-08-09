@@ -2,6 +2,10 @@ import express from "express"
 import cors from "cors"
 import bodyParser from "body-parser"
 import router from "./routes/router.js"
+import db_initalize from "./models/db_init.js"
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const app = express() 
 
@@ -22,7 +26,9 @@ app.use(cors(corsOptions))
 
 app.use("/", router)
 
-const port = process.env.PORT || 4000
+db_initalize() 
+
+const port = process.env.PORT
 const server = app.listen(port, () => {
     console.log("Server is running on port " + port)
 })

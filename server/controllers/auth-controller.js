@@ -1,5 +1,5 @@
 import createError from "http-errors"
-import db from "../models/db.js"
+import db_users from "../models/db_users.js"
 
 const controller = {
     register: async(req, res) => {
@@ -16,7 +16,7 @@ const controller = {
             }
             
             //Find existing username
-            const doesUserExist = await db.findUser({username: userResult.username})
+            const doesUserExist = await db_users.findUser({username: userResult.username})
             if(doesUserExist) throw createError[500]("User already exists")
     
             //Check if email is valid
@@ -47,7 +47,7 @@ const controller = {
                 profilePhoto: 'temporary.png',
             }
 
-            await db.insertUser(data)
+            await db_users.insertUser(data)
             res.send(data)
         }catch(e){
             res.send(e) 
@@ -60,15 +60,15 @@ const controller = {
             console.log(result)
 
             //Check if user exists
-            const doesUserExist = await db.findUser({username: result.username})
+            const doesUserExist = await db_users.findUser({username: result.username})
             if (!doesUserExist) res.send({status: 400, message: 'User not registered'})
 
             //Check if password is good 
-            const validPassword = await db.validateUser(result)
+            const validPassword = await db_users.validateUser(result)
             if(!validPassword) res.send({status: 401, message: "Invalid Username/Password"}) 
             
             //Get user role
-            const role = await db.getUserRole({username: result.username})
+            const role = await db_users.getUserRole({username: result.username})
 
             res.send({
                 status: 200, 

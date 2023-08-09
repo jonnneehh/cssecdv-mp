@@ -13,10 +13,6 @@ const pool = mysql.createPool({
     }).promise()
 
 const db = {
-
-    /**
-     * TODO: Do bcrypt password here instad of auth-controller.js
-     */
     insertUser: async function(data) {
         try{
             //Double check if JSON has data
