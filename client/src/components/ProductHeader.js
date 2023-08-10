@@ -10,6 +10,7 @@ function ProductHeader(){
                 <div className="header-category"><p>Category</p></div>
                 <div className="header-cost"><p>Cost</p></div>
                 <div className="header-quantity"><p>Quantity</p></div>
+                <div className="header-comment"><p>Comments</p></div>
             </div>
         </>
     )

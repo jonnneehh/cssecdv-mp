@@ -3,7 +3,7 @@ import Footer from "../components/Footer.js"
 
 import Login from "../pages/Login.js"
 import Register from "../pages/Register.js"
-import UserView from "../pages/UserView.js"
+import ProductsView from "../pages/ProductsView.js"
 
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
 
@@ -26,7 +26,7 @@ export default function Router(){
                     <Route path="/" element={<Login />}></Route>
                     <Route path="/login" element={<Login />}></Route>
                     <Route path="/register" element={<Register />}></Route>
-                    <Route path="/view" element={<UserView />}></Route> {/* FOR REGULAR USER VIEW */}
+                    <Route path="/view" element={<ProductsView />}></Route> {/* FOR REGULAR USER VIEW */}
                 </Route>
             </Routes>
             </BrowserRouter>

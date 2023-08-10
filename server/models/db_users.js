@@ -2,22 +2,23 @@ import mysql from 'mysql2';
 import createError from 'http-errors';
 import bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
+import bcryptEncrypt from '../auth/bcryptEncrypt.js';
 
 dotenv.config()
 
 const pool = mysql.createPool({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        database: process.env.DB_NAME,
-        password: process.env.DB_PASSWORD
-    }).promise()
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD
+}).promise()
 
 const db = {
     insertUser: async function(data) {
         try{
             //Double check if JSON has data
             if (!data) throw createError[500]("JSON does not contain username")
-            const bcryptpassword = await do_encrypt(data.password)
+            const bcryptpassword = await bcryptEncrypt(data.password)
             
             const [result] = await pool.query(`
             INSERT INTO users (username, firstName, lastName, email, mobileNum, password, profilePhoto) 
@@ -28,14 +29,6 @@ const db = {
         }
         catch(e){
             console.log(e)
-        }
-
-        function do_encrypt(pw){
-            return new Promise(async (res) => {
-                const salt = await bcrypt.genSalt(10)
-                const hashedPassword = await bcrypt.hash(pw, salt)
-                res(hashedPassword)
-            })
         }
     }, 
  

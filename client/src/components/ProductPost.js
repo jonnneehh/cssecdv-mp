@@ -2,7 +2,6 @@ import './css/ProductPost.css'
 import { useState } from 'react';
 
 function ProductPost(props) {
-
     //Removed the setId, setName, setDescription, setCategory, and setCost to avoid warning errors
     const [quantity, setQuantity] = useState(props.product.quantity)
     const [id] = useState(props.product.id)
@@ -10,11 +9,13 @@ function ProductPost(props) {
     const [description] = useState(props.product.description)
     const [category] = useState(props.product.category)
     const [cost] = useState(props.product.cost)
-
+    const [comment] = useState(props.product.comment)
+    
+    
     return (
         <>
             <div className="product-post" key={id}>
-                <div className="product-id" key={id + id}><p>{id}</p></div>
+                <div className="product-id" ><p>{id}</p></div>
                 <div className="product-name"><p>{name}</p></div>
                 <div className="product-description"><p>{description}</p></div>
                 <div className="product-category"><p>{category}</p></div>
@@ -24,6 +25,7 @@ function ProductPost(props) {
                     <p>{quantity}</p>
                     <button onClick={() => setQuantity(quantity + 1)} type="button">+</button>
                 </div>
+                <div className="product-comment"><p>{comment}</p></div>
             </div>
         </>
     )
