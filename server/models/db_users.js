@@ -75,7 +75,7 @@ const db = {
           }
     },
 
-    getUserRole: async function(data){
+    getUserId: async function(data){
         try{
             //Double check if JSON has username
             if (!data.username) throw createError[500]("JSON does not contain username")
@@ -86,6 +86,25 @@ const db = {
             FROM users 
             WHERE username = ?
             `, [data.username])
+
+            return result.id
+        }
+        catch(e){
+            console.log(e)
+        }
+    },
+
+    getUserRole: async function(data){
+        try{
+            //Double check if JSON has username
+            if (!data.id) throw createError[500]("JSON does not contain username")
+
+            //Check SQL if user exists using the query below
+            const [[result]] = await pool.query(`
+            SELECT * 
+            FROM users 
+            WHERE id = ?
+            `, [data.id])
 
             return result.role
         }

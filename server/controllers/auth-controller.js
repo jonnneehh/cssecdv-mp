@@ -57,7 +57,6 @@ const controller = {
     login: async (req, res) => {
         try{
             const result = req.body
-            console.log(result)
 
             //Check if user exists
             const doesUserExist = await db_users.findUser({username: result.username})
@@ -68,15 +67,15 @@ const controller = {
             if(!validPassword) res.send({status: 401, message: "Invalid Username/Password"}) 
             
             //Get user role
-            const role = await db_users.getUserRole({username: result.username})
+            const id = await db_users.getUserId({username: result.username})
 
             res.send({
                 status: 200, 
                 success: true,
-                role: role
+                userId: id,
             }) 
         }catch(e){ 
-            //res.send(e)
+            console.error(e)
         }
     }
 }

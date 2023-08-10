@@ -6,11 +6,10 @@ import { useNavigate } from "react-router-dom"
 import axios from '../api/axios'
 const LOGIN_URL = '/login'
 const VIEW_URL = '/view'
+const USER_AUTH_URL = '/userauth'
 
 function Login(){
     const navigate = useNavigate()
-    
-    const { setAuth } = useContext(AuthContext);
     
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -39,20 +38,19 @@ function Login(){
                 const response = await axios.post(LOGIN_URL, postData);
                 
                 if(response?.data?.success){ 
-                    const role = response?.data?.role
-                    const accessToken = response?.data?.accessToken
+                    const userId = response?.data?.userId
+                    console.log(userId)
 
-                    console.log(response?.data?.role)
-
-                    setUsername('')
-                    setPassword('')
-                    setError('')
-                    await setAuth({ username, password, role, accessToken });
-                    
+                    //Put userId in body to go to req.user
+                    const dataForUserAuth = {
+                        userId: userId
+                    }
+                    const returneduser = await axios.post(USER_AUTH_URL, dataForUserAuth)
+                    console.log(returneduser)
                     //REDIRECT TO VIEWS
                     navigate(VIEW_URL)
-                }
-                else{
+                }     
+                else{ 
                     setError("Invalid Username/Password")
                 }
             }  

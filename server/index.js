@@ -29,9 +29,10 @@ app.use("/", router)
 db_initalize() 
 
 const port = process.env.PORT
-const server = app.listen(port, () => {
+app.listen(port, () => {
     console.log("Server is running on port " + port)
 })
+
 
   
  
